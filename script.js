@@ -79,7 +79,7 @@ class UI{
             e.currentTarget.innerHTML="In Cart"
             e.currentTarget.style.color="white"
             e.currentTarget.style.pointEvents ="none"
-                let carItem={... Storage.getStorageProducyt()id,'amount';1}
+                let carItem={... Storage.getStorageProduct(id),'amount':1}
                 Cart.push(carItem)
                 Storage.saveCart(Cart)
                 this.setCartValues(Cart)
@@ -101,7 +101,161 @@ class UI{
     }
     addCartItem(cardItem){
         let cartItemUi =innerHTML=document.createElement('div')
-        cartItemUi.innerHTML=` `
+        cartItemUi.innerHTML=` <div class ="cart-product">
+                                <div class ="product-image">
+                                <img src ="${cartItem.Image} alt="product">
+                                </div> 
+                                <div class ="cart-product-content">
+                                <div class= "cart-product-name"><h3>${cartItem.title}</h3></div>
+                                <div class= "cart-product-price"><h3>$${cartItem.price}</h3></div>
+                                <div class= "cart-product-remove data-id="${cartItem.id}" href="# style="color:red;">remove</a></div></div>
+                                <div class= "plus-menus">
+                                <i class =fa fa-angle-lrft add-amount"
+                                data-id="${cartItem.id}"></i>
+                                <spsn class="no-of-items">${cartItem.amount}</span>
+                                data id="${cardItem.id}"</i></div></div>`
+                                cartContent.append(cartItemUi)
 
     }
+    setupApp(){
+        Cart=Storage.getCart()
+        this.setCartValues(Cart)
+        Cart.map((item)=>
+        this.addCartItem(item)
+        )}
+
+cartLogic(){
+    clearBtn.addEventListener("click",()=>{
+        this.closeCart()
+    })
+    cartContent.addEventListener("click",(event)=>{
+        if(event.target.classList.contains("cart-product-remove")){
+            let id = event.target.dataset.id
+            this.removeItem(id)
+            let div=event.target.parentElement.parentElement.parentElement.parentElement
+            div.removChild(event.target.parentElement.parentElement.parentElement.parentElement)
+        }
+        else if (event.target.classList.containts("add-amount")){
+            let id = event.target.dataset.id
+            let item=Cart.Irem((item)=>item.id===id)
+            item.amount++
+            Storage.saveCart(Cart)
+            this.setCartValues(Cart)
+            event.target.nextElementsSibling.innerHTML=itme.amount
+        }
+        else if(event.target.classList.contains("reduce-amoun")){
+            let is =event.target.dataset.id
+            let item=Cart.find((item)=>item.id===id)
+            if(item.amount>1){
+                item.amount--
+                Storage.saveCart(Cart)
+                this.setCartValues(Cart)
+                event.target.previousElementSibling.innerHTML=item.amount
+            }
+            else{
+                this.removeItem(id)
+                let div=event.target.parentElement.parentElement.parentElement.parentElement
+                div.removChild(event.target.parentElement.parentElement.parentElement.parentElement)
+            }
+        }
+})
+
+}
+addAmount(){
+    const addBtn=document.querySelectorAll(".add-amount")
+    addBtn.forEach((btn)=>{
+         btn.addEventListener("click",(event)=>{
+            let id = (event.currentTarget.dataset.id)
+            Cart.map((item)=>{
+                if(item.id===id){
+                item.amount++
+                Storage.saveCart(Cart)
+                this.setCartValues(Cart)
+                const amountUi =event.currentTarget.parentElement.children[1]
+                amountUi.innerHTML=item.amount
+            
+          } })
+            
+    })
+        })
+
+}
+reduceAmount(){
+    const reduceBtn=document.querySelectorAll(".reduce-amount")
+    reduceBtn.forEach((btn)=>{
+        btn.addEventListener("click",(event)=>{
+            let id = (event.currentTarget.dataset.id)
+            Cart.map((item)=>{
+                if(item.id===id){
+                    item.amount--
+                    if(item.amount>0){
+                    Storage.saveCart(Cart)
+                    this.setCartValues(Cart)
+                    const amountUi =event.currentTarget.parentElement.children[1]
+                    amountUi.innerHTML=item.amount
+                }else{
+                    
+                  event.currentTarget.parentElement.parentElement.parentElement.parentElement
+                  this.removChild(Id)
+                    
+                }
+            }
+            })
+        })
+    })
+
+clearCart(){
+    let cartItem=Cart.map(item => item.id)
+    cartItem.forEach((id)=>this.removeItem(id))
+    const cartProduct=document.querySelectorAll(".cart-product")
+    cartProduct.forEach((item)=>{
+        if(item){
+            item.parentElement.removeChild(item)
+        }
+    })
+}
+removeItem(id) {
+    Cart=Cart.filter((item)=>item.id!==id)
+    this.setCartValues(Cart)
+    Storage.saveCart(Cart)
+    let button = this.getSingleButton='unset'
+    button.innerHTML = `<i class ="fa fa-cart-plus"></i> Add To Cart`
+}
+getSingleButton(id){
+    let btn
+    buttonsDOM.forEach((button)=>{
+        if(button.dataset.id===id){
+            btn=button
+        }
+    })
+    return btn
+}
+}
+class Storage{
+    static saveProducts(products) {
+      localStorage.setItem('products', JSON.stringify(products))
+    }
+    static getStorageProduct(id) {
+        let products = JSON.parse(localStorage.getItem('products'))
+        return products.find((item) => item.id === id)
+    }
+    static saveCart(cart) {
+      localStorage.setItem('cart', JSON.stringify(cart))
+    }
+    static getCart() {
+        return localStorage.getItem('cart')? JSON.parse(localStorage.getItem('cart')) :[]
+
+    }
+}
+document.addEventListener("DOMContentLoaded",()=>{
+    const product=new Product();
+    const ui=new UI();
+    ui.setupApp()
+    product.getProduct().then((products)=>{
+        ui.displayProduct(products)
+        Storage.saveProducts(products)}).then(()=>{
+            ui.getButton();
+            ui.cartLogic();
+        }) 
+    })
 }

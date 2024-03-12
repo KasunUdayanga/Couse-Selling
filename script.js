@@ -13,34 +13,34 @@ const cartContent=document.querySelector("cart-content");
 
 let Cart=[];
 let bittonsDOM=[];
-    cart.addEventListener("click",function(){
-    cartSidebar.classList.transform="transition(0%)";
-    const bodyoverlay=document.createElement("div");
-    bodyoverlay.classList.add("overlay");
+cart.addEventListener("click",function(){
+    cartSidebar.style.transform="transition(0%)"
+    const bodyOverlay=document.createElement("div")
+    bodyOverlay.classList.add("overlay");
     setTimeout(function(){
-        document.querySelector("body").appendChild(bodyoverlay)
+        document.querySelector("body").append(bodyOverlay)
     },300);
     })
-   closecart.addEventListener("click",function(){
-    cartSidebar.classList.transform="translateX(-100%)";
-    const bodyoverlay=document.querySelector(".overlay");
-        document.querySelector("body").removeChild(bodyoverlay)
+closecart.addEventListener("click",function(){
+    cartSidebar.style.transform="translate(100%)";
+    const bodyOverlay=document.querySelector(".overlay");
+        document.querySelector("body").removeChild(bodyOverlay)
    })
-   buger.addEventListener("click",function(){
-    menuSidebar.classList.transform="translateX(0%)";
+buger.addEventListener("click",function(){
+    menuSidebar.classList.transform="translate(0%)";
    })
-   close.addEventListener("click",function(){
-    menuSidebar.classList.transform="translateX(-100%)";
+close.addEventListener("click",function(){
+    menuSidebar.classList.transform="translate(-100%)";
    });
 class Product{
     async getProduct(){
-        const response=await fetch("products.json");
+        const response=await fetch("product.json");
         const data = await response.json();
         let products=data.items;
         products=products.map(items => {
             const{title,price} = item.fields;
-            const{id}=item.sys;
-            const image=item.fields.image.fields.file.url;
+            const{id}=items.sys;
+            const image= items.fields.image.fields.file.url;
             return {title,price,image,id};
         })
         return products;

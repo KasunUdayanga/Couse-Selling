@@ -158,7 +158,7 @@ ul{
     width: 100%;
     margin-bottom: 1rem;
     font-size: 1.1rem;
-    font-family: Verdana;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 .cart-product .product-image img{
     width: 130px;
